@@ -8,11 +8,22 @@ export default {
   ],
   theme: {
     extend: {
-      colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-      },
+        colors: {
+            background: {
+                light: '#ffffff',
+                dark: '#181818',
+            },
+            text: {
+                light: '#000000',
+                dark: '#ffffff',
+            },
+            primary: {
+                light: '#3498db',
+                dark: '#2980b9',
+            }
+        },
     },
-  },
+},
   plugins: [],
+  darkMode: 'class', 
 } satisfies Config;
