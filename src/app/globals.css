@@ -3,17 +3,13 @@
 @tailwind utilities;
 
 
-:root[data-theme='light'] {
-  --background-color: white;
-  --text-color: black;
+
+
+.container {
+ 
+  width: 100vw;
+  height: 100vh;
+  
+  background-color: white;
 }
 
-:root[data-theme='dark'] {
-  --background-color: black;
-  --text-color: white;
-}
-
-body {
-  background-color: var(--background-color);
-  color: var(--text-color);
-}
