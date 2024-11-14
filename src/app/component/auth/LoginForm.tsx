@@ -9,15 +9,17 @@ import Logo from "../reusable/Logo";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "@/app/lib/firebase";
 import { LoginForm, AppUser } from "@/app/interfaces";
-import { useAppDispatch } from "../redux/hooks/hooks";
-import { setUser } from "../redux/slices/userSlice";
+import { useAppDispatch } from "../../redux/hooks/hooks";
+import { setUser } from "../../redux/slices/userSlice";
 import { doc, getDoc } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 
 
 
 const Login = () => {
   const dispatch = useAppDispatch();
-  const { register, handleSubmit, formState ,} = useForm<LoginForm>({
+  const {replace} = useRouter();
+  const { register, handleSubmit, formState } = useForm<LoginForm>({
     defaultValues: {
       email: "",
       password: "",
@@ -39,11 +41,12 @@ const Login = () => {
         const user: AppUser = {
           email: userFirebase.email!,
           username: userData.username || "",
-          avatar: userData.avatar || { file: "", url: "" },
+          uid: userId,
           description: userData.description || "",
         };
 
         dispatch(setUser(user));
+        replace('/pages/userprofile')
         console.log("Login successful with full user data");
       } else {
         console.log("User data not found in Firestore");
@@ -55,7 +58,7 @@ const Login = () => {
   
 
   return (
-    <div className="w-full h-[87vh] dark:bg-black text-dark dark:text-white shadow-lg flex">
+    <div className="w-full h-[87vh] shadow-lg flex">
       <form autoComplete="off"
         style={{
           boxShadow: "15px 13px 44px 15px rgba(99,0,191,1)",

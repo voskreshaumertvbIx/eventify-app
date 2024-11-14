@@ -50,7 +50,7 @@ const Register = () => {
   };
 
   return (
-    <div className="w-full h-[87vh] dark:bg-black text-dark dark:text-white shadow-lg flex">
+    <div className="w-full h-[87vh] shadow-lg flex">
       <form
         autoComplete="off"
         style={{
@@ -87,7 +87,7 @@ const Register = () => {
             className=""
             error={formState.errors["password"]?.message}
             {...register("password", {
-              required: true,
+              required: 'Password required',
               pattern: {
                 value:
                   /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+={}\[\]|\\:;,.<>?/-]{6,}$/,

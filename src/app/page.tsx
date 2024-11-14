@@ -1,18 +1,20 @@
+'use client'
+import { useRouter } from "next/navigation";
 
 
 
-import Login from "./component/auth/LoginForm";
+
 
 
 
 
 export default function HomePage() {
  
-
+ const {push } = useRouter();
   return (
     <div className="">
    
-      <Login/>
+    <button onClick={()=> push('pages/login')}> login</button>
       
     </div>
   );

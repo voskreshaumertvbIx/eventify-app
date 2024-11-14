@@ -4,12 +4,41 @@
 
 
 
-
-.container {
- 
-  width: 100vw;
-  height: 100vh;
-  
-  background-color: white;
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.flex {
+  display: flex;
+}
+
+.min-h-screen {
+  min-height: 100vh;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+.light body {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+
+.dark body {
+  background-color: black;
+  color: #ffffff;
+}
