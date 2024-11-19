@@ -43,6 +43,11 @@ const Login = () => {
           username: userData.username || "",
           uid: userId,
           description: userData.description || "",
+          name: userData.name || "",
+          surname: userData.surname || "",
+          address: userData.address || "",
+          age: userData.age || null
+
         };
 
         dispatch(setUser(user));

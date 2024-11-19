@@ -1,29 +1,24 @@
-import { AppUser } from "@/app/interfaces";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getAuth, onAuthStateChanged , User as FirebaseUser } from "firebase/auth";
+import { db } from "@/app/lib/firebase"; // Ваши настройки Firebase
+import { doc, getDoc } from "firebase/firestore";
+import { AppUser } from "@/app/interfaces";
 
-export const fetchUser = createAsyncThunk("user/fetchUser", async () => {
-  const auth = getAuth();
+export const fetchUser = createAsyncThunk<AppUser, string>(
+  "user/fetchUser",
+  async (uid) => {
+    const userRef = doc(db, "users", uid);
+    const userSnapshot = await getDoc(userRef);
 
-  try {
-    const user = await new Promise<AppUser | null>((resolve, reject) => {
-      onAuthStateChanged(auth, (firebaseUser: FirebaseUser | null) => {
-        if (firebaseUser) {
-          const user: AppUser = {
-            uid: firebaseUser.uid,
-            email: firebaseUser.email,
-          };
-          resolve(user);
-        } else {
-          resolve(null);
-        }
-      }, reject);
-    });
-
-    return user;
-  } catch (error) {
-    
-    console.error("Ошибка получения пользователя:", error);
-    return null;
+    if (userSnapshot.exists()) {
+      const userData = userSnapshot.data();
+      console.log(userData)
+      return {
+        ...userData,
+        avatar: userData.avatar || null, 
+      } as AppUser;
+   
+    } else {
+      throw new Error("User not found");
+    }
   }
-});
+);

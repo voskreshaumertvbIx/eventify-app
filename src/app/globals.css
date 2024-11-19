@@ -2,6 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+.menu-item {
+  @apply flex items-center border-b border-gray-300 dark:border-gray-600 h-8 mb-2 last:border-none cursor-pointer;
+}
+
+.icon {
+  @apply w-[20px] h-[23px] mr-2;
+}
+.container {
+  @apply w-[1440px] mx-auto;
+}
+
+/* Для всех браузеров */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield; /* Для Firefox */
+}
 
 
 html,

@@ -1,5 +1,7 @@
-import { AppUser } from "@/app/interfaces";
+
 import { createSlice, PayloadAction} from "@reduxjs/toolkit";
+
+import { AppUser } from "@/app/interfaces";
 import { fetchUser } from "../thunk/getUserThunk";
 
 interface UserState {

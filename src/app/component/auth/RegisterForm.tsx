@@ -41,6 +41,10 @@ const Register = () => {
         username: data.username,
         description: '' ,
         avatar: '',
+        name:'',
+        surname:'',
+        address: '',
+        age: '',
       });
       console.log("User registered successfully:", user);
       reset();
