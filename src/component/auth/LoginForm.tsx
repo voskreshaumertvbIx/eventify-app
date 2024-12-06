@@ -29,7 +29,7 @@ const Login = () => {
      
       if (user) {
         console.log("Login successful with full user data:", user);
-        replace("/pages/userprofile");
+        replace("/dashboard/userprofile");
       } else {
         console.error("User not found in Firestore");
       }

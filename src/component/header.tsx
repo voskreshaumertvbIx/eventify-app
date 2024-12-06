@@ -10,6 +10,7 @@ import UserMenuModal from "./userMenuModal";
 import { FaPlus } from "react-icons/fa";
 
 import { useUserStore } from "../redux/store/userStore";
+import Link from "next/link";
 
 const links = [
   {
@@ -44,7 +45,7 @@ const Header = () => {
     console.log("clicked");
   };
   const navigateToCreateEvent = () => {
-    router.push("/pages/createevents");
+    router.push("/dashboard/createevents");
   };
   return (
     <header className="flex items-center justify-around dark:bg-black dark:text-white">
@@ -54,13 +55,13 @@ const Header = () => {
       <div className="flex w-[300px] justify-between">
         {links.map((link) => {
           return (
-            <a
+            <Link
               className="h-full border-black hover:scale-105 hover:border-b-2 dark:border-white"
               key={link.name}
               href={link.route}
             >
               {link.name}
-            </a>
+            </Link>
           );
         })}
       </div>
@@ -89,13 +90,9 @@ const Header = () => {
           </div>
         ) : (
           <span>
-            <a className="hover:border-b-2" href="/pages/login">
-              Login
-            </a>
+            <Link className="hover:border-b-2" href={'/auth/login'}>Login</Link>
             <span> / </span>
-            <a className="hover:border-b-2" href="/pages/register">
-              Registration
-            </a>
+            <Link className="hover:border-b-2" href={'/auth/register'}>Registration</Link>
           </span>
         )}
       </div>

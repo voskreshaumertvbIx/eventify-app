@@ -7,6 +7,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { useUserStore } from "../store/userStore";
+import Cookies from "js-cookie";
 
 export const userApi = createApi({
   reducerPath: "userApi",
@@ -30,6 +31,13 @@ export const userApi = createApi({
           if (userDoc.exists()) {
             const userData = { ...user, ...userDoc.data() } as AppUser;
             useUserStore.getState().setUser(userData);
+            useUserStore.getState().setInitialized(true);
+            const accsesToken = await user.getIdToken();
+            Cookies.set("accessToken ", accsesToken, {
+              secure: true,
+              sameSite: "strict",
+              expires: 1,
+            });
             return { data: userData };
           } else {
             return { error: { status: 404, data: "User document not found" } };
@@ -80,6 +88,7 @@ export const userApi = createApi({
           try {
             const userRef = doc(db, "users", uid);
             await updateDoc(userRef, data);
+            
             return { data: undefined };
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any

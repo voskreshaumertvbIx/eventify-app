@@ -8,7 +8,7 @@ const UserMenuModal = () => {
   const router = useRouter();
 
   const handleUserProfile = () => {
-    router.replace("/pages/userprofile");
+    router.replace("/dashboard/userprofile");
   };
 
   const handleLogOut = () => {

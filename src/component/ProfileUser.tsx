@@ -55,29 +55,33 @@ const Profile = () => {
       console.error("No user or UID found");
       return;
     }
-
+  
     const updatedData = {
       ...data,
+      email:user.email,
       avatar: {
         url: avatar.url,
         file: avatar.file,
       },
     };
-
+  
     try {
       await updateUser({ uid: user.uid, data: updatedData }).unwrap();
+      useUserStore.getState().setUser(updatedData);
       console.log("Profile updated:", updatedData);
       setEdit(false);
     } catch (error) {
       console.error("Update failed:", error);
     }
   };
+  
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleImageUpload = (result: any) => {
     const uploadedUrl = result.info.secure_url;
     const uploadedFile = result.info.public_id;
 
+    // Обновляем только локальное состояние
     setAvatar({ url: uploadedUrl, file: uploadedFile });
     console.log("Uploaded image:", { url: uploadedUrl, file: uploadedFile });
   };
@@ -138,10 +142,7 @@ const Profile = () => {
         {edit ? "Cancel" : "Edit"}
       </Button>
 
-      <CldUploadWidget
-        uploadPreset="zuytp4aj"
-        onSuccess={(result) => handleImageUpload(result)}
-      >
+      <CldUploadWidget uploadPreset="zuytp4aj" onSuccess={handleImageUpload}>
         {({ open }) => (
           <button disabled={!edit} onClick={() => open()} className="mt-4">
             Upload an Image
