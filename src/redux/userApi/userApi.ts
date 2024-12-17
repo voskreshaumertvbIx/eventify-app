@@ -82,28 +82,34 @@ export const userApi = createApi({
       },
     }),
 
-    updateUser: builder.mutation<void, { uid: string; data: Partial<AppUser> }>(
-      {
-        async queryFn({ uid, data }) {
-          try {
-            const userRef = doc(db, "users", uid);
-            await updateDoc(userRef, data);
-            
-            return { data: undefined };
-
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          } catch (error: any) {
-            return { error: { status: 500, data: error.message } };
+    updateUser: builder.mutation<AppUser, { uid: string; data: Partial<AppUser> }>({
+      async queryFn({ uid, data }) {
+        try {
+          const userRef = doc(db, "users", uid);
+          await updateDoc(userRef, data);
+    
+      
+          const updatedUserDoc = await getDoc(userRef);
+          if (!updatedUserDoc.exists()) {
+            throw new Error("User not found after update");
           }
-        },
+          const updatedUser = updatedUserDoc.data() as AppUser;
+    
+          return { data: updatedUser }; 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+          return { error: { status: 500, data: error.message } };
+        }
       },
-    ),
+    }),
+    
 
     deleteUser: builder.mutation<void, string>({
       async queryFn(uid) {
         try {
           const userRef = doc(db, "users", uid);
           await deleteDoc(userRef);
+        
           return { data: undefined };
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
@@ -112,19 +118,25 @@ export const userApi = createApi({
       },
     }),
 
-    logout: builder.mutation<void, void>({
-      async queryFn() {
+    logout: builder.mutation<null, void>({
+      queryFn: () => ({ data: null}), 
+      async onCacheEntryAdded(_, { cacheEntryRemoved }) {
         try {
-          await auth.signOut();
+         
+          auth.signOut();
           localStorage.clear();
           useUserStore.getState().setUser(null);
-          return { data: undefined };
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-          return { error: { status: 500, data: error.message } };
+    
+          
+          await cacheEntryRemoved;
+        } catch (error) {
+          console.error("Logout failed:", error);
         }
       },
     }),
+    
+    
+    
   }),
 });
 

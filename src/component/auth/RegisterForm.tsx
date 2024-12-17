@@ -6,7 +6,7 @@ import { Button } from "../reusable/Button";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Logo from "../reusable/Logo";
 import { Registerform } from "@/interfaces";
-import { useRegistrationMutation } from "@/redux/userQuerry/userApi";
+import { useRegistrationMutation } from "@/redux/userApi/userApi";
 
 
 

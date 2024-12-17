@@ -23,7 +23,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <input
           autoComplete="off"
           className={cn(
-            "flex h-10 w-[300px] cursor-text items-center rounded-lg border-[1px] border-black bg-transparent p-3 outline-none transition duration-500 focus:border-violet-700 focus:outline-none dark:border-white dark:hover:border-violet-500 dark:focus:border-violet-700",
+            "main-input",
             className,
             `${error ? "mb-0" : "mb-2"}`,
           )}

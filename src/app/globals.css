@@ -16,6 +16,9 @@
 .border{
   @apply border-[1px] border-black dark:border-white
 }
+.main-input{
+  @apply flex h-10 w-[300px] cursor-text items-center rounded-lg border-[1px] border-black bg-transparent p-3 outline-none transition duration-500 focus:border-violet-700 focus:outline-none dark:border-white dark:hover:border-violet-500 dark:focus:border-violet-700
+}
 
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
@@ -64,4 +67,19 @@ body {
 .dark body {
   background-color: black;
   color:white
+}
+body::-webkit-scrollbar {
+  display: none;
+}
+
+body::-webkit-scrollbar-button {
+  display: none;
+}
+
+body::-webkit-scrollbar {
+  width: 8px;
+}
+
+body::-webkit-scrollbar-track {
+  background-color: transparent; 
 }

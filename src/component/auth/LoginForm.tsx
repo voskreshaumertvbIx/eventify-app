@@ -8,7 +8,7 @@ import Logo from "../reusable/Logo";
 import { useRouter } from "next/navigation";
 
 import { LoginForm } from "@/interfaces";
-import { useLoginMutation } from "@/redux/userQuerry/userApi";
+import { useLoginMutation } from "@/redux/userApi/userApi";
 
 
 

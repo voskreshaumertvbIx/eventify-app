@@ -28,12 +28,30 @@ export interface AppUser {
   age?: number | string | null;
 }
 export interface Event {
+  uid: string;
   image: Avatar;
   title: string;
   description: string;
+  location: {
+    lat: number;
+    lon: number;
+  };
+  dateinfo: {
+    date: Date | null;
+    start: string;
+    end: string;
+  };
 }
 export interface Registerform {
   email: string;
   password: string;
   username: string;
+}
+export interface LocationState {
+  lat: number | null;
+  lon: number | null;
+  setLocation: (lat: number, lon: number) => void;
+  resetLocation: () => void;
+  setInitialized: (initialized: boolean) => void;
+  initialized: boolean;
 }

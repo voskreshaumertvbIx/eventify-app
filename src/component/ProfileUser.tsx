@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { AppUser } from "@/interfaces";
-import { useUpdateUserMutation } from "../redux/userQuerry/userApi";
+import { useUpdateUserMutation } from "../redux/userApi/userApi";
 
 import { Input } from "./reusable/Input";
 import { Button } from "./reusable/Button";
@@ -35,6 +35,7 @@ const Profile = () => {
   useEffect(() => {
     if (user) {
       reset({
+        uid: user.uid,
         username: user.username,
         description: user.description,
         name: user.name,
@@ -49,7 +50,7 @@ const Profile = () => {
     }
     console.log(user);
   }, [user, reset]);
-
+ 
   const onSubmit: SubmitHandler<Partial<AppUser>> = async (data) => {
     if (!user || !user.uid) {
       console.error("No user or UID found");
@@ -67,21 +68,20 @@ const Profile = () => {
   
     try {
       await updateUser({ uid: user.uid, data: updatedData }).unwrap();
-      useUserStore.getState().setUser(updatedData);
+      useUserStore.getState().setUser(updatedData)
       console.log("Profile updated:", updatedData);
       setEdit(false);
     } catch (error) {
       console.error("Update failed:", error);
     }
   };
-  
+ 
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleImageUpload = (result: any) => {
     const uploadedUrl = result.info.secure_url;
     const uploadedFile = result.info.public_id;
 
-    // Обновляем только локальное состояние
     setAvatar({ url: uploadedUrl, file: uploadedFile });
     console.log("Uploaded image:", { url: uploadedUrl, file: uploadedFile });
   };
@@ -158,6 +158,7 @@ const Profile = () => {
             width={128}
             height={128}
             className="rounded-full"
+            loading="lazy"
           />
         ) : (
           <p>No avatar uploaded</p>
