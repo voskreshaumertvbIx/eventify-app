@@ -33,13 +33,16 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+       
         <div className="flex min-h-screen flex-col">
           <Providers>
             <Header />
             <main className="flex-grow">{children}</main>
             <Footer />
           </Providers>
+          
         </div>
+         <div id="overlays" className="absolute  z-[999]"></div>
       </body>
     </html>
   );

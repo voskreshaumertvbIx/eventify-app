@@ -8,6 +8,7 @@ interface TimePickerProps<T extends FieldValues> extends UseControllerProps<T> {
   className?: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const TimePicker = <T extends Record<string, any>>({
   label,
   availableTimes,
@@ -15,10 +16,10 @@ const TimePicker = <T extends Record<string, any>>({
   control,
   name,
   rules,
-  className = "",
+  
 }: TimePickerProps<T>) => {
   return (
-    <div className={className}>
+    <div className='flex flex-col relative' >
       <label htmlFor={name} className="mb-1 block">
         {label}
       </label>
@@ -29,7 +30,7 @@ const TimePicker = <T extends Record<string, any>>({
         render={({ field, fieldState }) => (
           <>
             <select
-              className="scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-gray-500 scrollbar-track-gray-100 dark:scrollbar-thumb-slate-500 dark:scrollbar-track-background-dark scroll-thumb-rounded-full overflow-y-auto rounded-md border px-1 py-3 dark:bg-background-dark dark:text-text-dark"
+              className="scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-gray-500 scrollbar-track-gray-100 dark:scrollbar-thumb-slate-500 dark:scrollbar-track-background-dark scroll-thumb-rounded-full overflow-y-auto rounded-md border  dark:bg-background-dark dark:text-text-dark h-10"
               {...field}
               onChange={(e) => {
                 field.onChange(e);
@@ -37,13 +38,13 @@ const TimePicker = <T extends Record<string, any>>({
               }}
             >
               {availableTimes.map((time) => (
-                <option className="dark:bg-black" key={time} value={time}>
+                <option className="dark:bg-black " key={time} value={time}>
                   {time}
                 </option>
               ))}
             </select>
             {fieldState.error && (
-              <p className="text-red-500">{fieldState.error.message}</p>
+              <p className="text-red-500 absolute bottom-[-25px] left-0 w-[200px]">{fieldState.error.message}</p>
             )}
           </>
         )}

@@ -33,7 +33,7 @@ export const userApi = createApi({
             useUserStore.getState().setUser(userData);
             useUserStore.getState().setInitialized(true);
             const accsesToken = await user.getIdToken();
-            Cookies.set("accessToken ", accsesToken, {
+            Cookies.set("accessToken", accsesToken, {
               secure: true,
               sameSite: "strict",
               expires: 1,
