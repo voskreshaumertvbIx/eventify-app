@@ -50,32 +50,31 @@ const Profile = () => {
     }
     console.log(user);
   }, [user, reset]);
- 
+
   const onSubmit: SubmitHandler<Partial<AppUser>> = async (data) => {
     if (!user || !user.uid) {
       console.error("No user or UID found");
       return;
     }
-  
+
     const updatedData = {
       ...data,
-      email:user.email,
+      email: user.email,
       avatar: {
         url: avatar.url,
         file: avatar.file,
       },
     };
-  
+
     try {
       await updateUser({ uid: user.uid, data: updatedData }).unwrap();
-      useUserStore.getState().setUser(updatedData)
+      useUserStore.getState().setUser(updatedData);
       console.log("Profile updated:", updatedData);
       setEdit(false);
     } catch (error) {
       console.error("Update failed:", error);
     }
   };
- 
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleImageUpload = (result: any) => {
@@ -92,36 +91,42 @@ const Profile = () => {
     <div className="container">
       <form onSubmit={handleSubmit(onSubmit)} className="p-4">
         <Input
+          id="username"
           type="text"
           placeholder="Username"
           {...register("username", { required: true })}
           disabled={!edit}
         />
         <Input
+          id="description"
           type="text"
           placeholder="Description"
           {...register("description")}
           disabled={!edit}
         />
         <Input
+          id="name"
           type="text"
           placeholder="Name"
           {...register("name")}
           disabled={!edit}
         />
         <Input
+          id="surname"
           type="text"
           placeholder="Surname"
           {...register("surname")}
           disabled={!edit}
         />
         <Input
+          id="address"
           type="text"
           placeholder="Address"
           {...register("address")}
           disabled={!edit}
         />
         <Input
+          id="age"
           type="number"
           placeholder="Age"
           {...register("age")}

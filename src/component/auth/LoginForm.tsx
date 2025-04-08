@@ -10,12 +10,9 @@ import { useRouter } from "next/navigation";
 import { LoginForm } from "@/interfaces";
 import { useLoginMutation } from "@/redux/userApi/userApi";
 
-
-
 const Login = () => {
-  
   const { replace } = useRouter();
-  const [login, {isLoading}] = useLoginMutation();
+  const [login, { isLoading }] = useLoginMutation();
   const { register, handleSubmit, formState } = useForm<LoginForm>({
     defaultValues: {
       email: "",
@@ -26,7 +23,7 @@ const Login = () => {
   const submit: SubmitHandler<LoginForm> = async (data) => {
     try {
       const user = await login(data).unwrap();
-     
+
       if (user) {
         console.log("Login successful with full user data:", user);
         replace("/dashboard/userprofile");
@@ -37,7 +34,6 @@ const Login = () => {
       console.error("Login error:", err);
     }
   };
-  
 
   return (
     <div className="flex h-[87vh] w-full shadow-lg">
@@ -57,6 +53,7 @@ const Login = () => {
           <p className="m-2">Your Gateway to Unforgettable Events</p>
 
           <Input
+            id="email"
             type="email"
             className=""
             placeholder="example@example.com"
@@ -87,7 +84,7 @@ const Login = () => {
             })}
           />
           <Button className="mt-4" variant={"default"} size={"sm"}>
-          {isLoading ? "Loading..." : "Login"}
+            {isLoading ? "Loading..." : "Login"}
           </Button>
         </div>
       </form>

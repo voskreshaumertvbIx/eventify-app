@@ -41,7 +41,7 @@ const Register = () => {
     <div className="flex h-[87vh] w-full shadow-lg">
       <form
         autoComplete="off"
-        className="form-shadow mx-auto mt-[9%] h-[60%] w-[450px] rounded-xl border-black p-2 dark:border-white"
+        className="form-shadow mx-auto mt-[9%] h-[60%] w-[450px] rounded-xl border-black p-2"
         onSubmit={handleSubmit(submit)}
         noValidate
       >
@@ -50,6 +50,7 @@ const Register = () => {
           <p className="m-2">Your Gateway to Unforgettable Events</p>
 
           <Input
+            id="email"
             type="email"
             placeholder="example@example.com"
             aria-label="Email"
@@ -64,6 +65,7 @@ const Register = () => {
           />
 
           <Input
+            id="password"
             type="password"
             placeholder="enter password"
             aria-label="Password"
@@ -80,6 +82,7 @@ const Register = () => {
           />
 
           <Input
+            id="username"
             type="text"
             placeholder="enter username"
             aria-label="Username"

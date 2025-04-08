@@ -20,7 +20,7 @@ const CreateEventModal = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleFieldChange = (field: string, value: any) => {
     setFormState((prevState) => ({ ...prevState, [field]: value }));
-    setValue(field, value); 
+    setValue(field, value);
   };
 
   const handleSubmit = () => {
@@ -31,7 +31,9 @@ const CreateEventModal = () => {
 
   const getButtonClasses = (isActive: boolean) =>
     `w-1/3 rounded border py-2 ${
-      isActive ? "bg-blue-500 text-white" : "border-gray-300 bg-white dark:bg-black"
+      isActive
+        ? "bg-blue-500 text-white"
+        : "border-gray-300 bg-white dark:bg-black"
     }`;
 
   return (
@@ -52,18 +54,19 @@ const CreateEventModal = () => {
         </h2>
         <div className="flex items-center">
           <Input
+            id="timebefore"
             type="number"
             defaultValue={formState.timebefore}
             {...register("timebefore", {
-              valueAsNumber: true, 
-              onChange: (e) => handleFieldChange("timebefore", e.target.value), 
+              valueAsNumber: true,
+              onChange: (e) => handleFieldChange("timebefore", e.target.value),
             })}
           />
           {["minutes", "hours"].map((option) => (
             <button
               key={option}
-              className={`mt-[19px] w-[90px] border px-3 py-[5px] ml-3 ${getButtonClasses(
-                formState.timeBeforeType === option
+              className={`ml-3 mt-[19px] w-[90px] border px-3 py-[5px] ${getButtonClasses(
+                formState.timeBeforeType === option,
               )}`}
               onClick={() => handleFieldChange("timeBeforeType", option)}
             >
@@ -76,17 +79,19 @@ const CreateEventModal = () => {
       <section className="mt-6">
         <h3 className="mb-2 text-lg font-bold">Is there an age restriction?</h3>
         <div className="flex space-x-4">
-          {["All ages allowed", "Theres an age restriction", "Parent or guardian needed"].map(
-            (option) => (
-              <button
-                key={option}
-                className={getButtonClasses(formState.ageRestriction === option)}
-                onClick={() => handleFieldChange("ageRestriction", option)}
-              >
-                {option}
-              </button>
-            )
-          )}
+          {[
+            "All ages allowed",
+            "Theres an age restriction",
+            "Parent or guardian needed",
+          ].map((option) => (
+            <button
+              key={option}
+              className={getButtonClasses(formState.ageRestriction === option)}
+              onClick={() => handleFieldChange("ageRestriction", option)}
+            >
+              {option}
+            </button>
+          ))}
         </div>
       </section>
 
@@ -125,21 +130,25 @@ const CreateEventModal = () => {
       )}
 
       <section className="mt-6">
-        <h3 className="mb-2 text-lg font-bold">Is there parking at your venue?</h3>
+        <h3 className="mb-2 text-lg font-bold">
+          Is there parking at your venue?
+        </h3>
         <div className="flex space-x-4">
-          {["Free parking", "Paid parking", "No parking options"].map((option) => (
-            <button
-              key={option}
-              className={getButtonClasses(formState.parkingOption === option)}
-              onClick={() => handleFieldChange("parkingOption", option)}
-            >
-              {option}
-            </button>
-          ))}
+          {["Free parking", "Paid parking", "No parking options"].map(
+            (option) => (
+              <button
+                key={option}
+                className={getButtonClasses(formState.parkingOption === option)}
+                onClick={() => handleFieldChange("parkingOption", option)}
+              >
+                {option}
+              </button>
+            ),
+          )}
         </div>
       </section>
 
-      <div className="flex justify-center mt-7">
+      <div className="mt-7 flex justify-center">
         <Button className="w-1/4" onClick={handleSubmit}>
           Add to event
         </Button>

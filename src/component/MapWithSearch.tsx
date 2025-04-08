@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useRef, useState } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -15,7 +15,7 @@ const MapWithSearch: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
-  const setLocation = useLocationStore((state)=> state.setLocation)
+  const setLocation = useLocationStore((state) => state.setLocation);
   const {
     data: results,
     error,
@@ -58,15 +58,15 @@ const MapWithSearch: React.FC = () => {
         .setLngLat([parseFloat(lon), parseFloat(lat)])
         .addTo(mapRef.current);
 
-       setLocation(parseFloat(lon), parseFloat(lon));
+      setLocation(parseFloat(lon), parseFloat(lon));
     }
   }, [results, setLocation]);
- 
 
   return (
     <div>
       <div className="mb-2">
         <Input
+          id="location"
           name="location"
           type="text"
           value={searchQuery}
