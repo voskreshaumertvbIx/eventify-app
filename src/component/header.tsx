@@ -30,8 +30,8 @@ const links = [
     route: "",
   },
   {
-    name: "name5",
-    route: "",
+    name: "About us",
+    route: "/about",
   },
 ];
 

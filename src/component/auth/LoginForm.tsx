@@ -15,7 +15,7 @@ import { useLoginMutation } from "@/redux/userApi/userApi";
 const Login = () => {
   
   const { replace } = useRouter();
-  const [login] = useLoginMutation();
+  const [login, {isLoading}] = useLoginMutation();
   const { register, handleSubmit, formState } = useForm<LoginForm>({
     defaultValues: {
       email: "",
@@ -25,7 +25,7 @@ const Login = () => {
 
   const submit: SubmitHandler<LoginForm> = async (data) => {
     try {
-      const user = await login(data);
+      const user = await login(data).unwrap();
      
       if (user) {
         console.log("Login successful with full user data:", user);
@@ -87,7 +87,7 @@ const Login = () => {
             })}
           />
           <Button className="mt-4" variant={"default"} size={"sm"}>
-            Login
+          {isLoading ? "Loading..." : "Login"}
           </Button>
         </div>
       </form>

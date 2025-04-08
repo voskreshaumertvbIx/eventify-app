@@ -41,6 +41,8 @@ export interface Event {
     start: string;
     end: string;
   };
+  createdby: string;
+  createdImg : Avatar;
 }
 export interface Registerform {
   email: string;

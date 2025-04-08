@@ -8,17 +8,16 @@ import {
 } from "firebase/auth";
 import { useUserStore } from "../store/userStore";
 import Cookies from "js-cookie";
+import { FirebaseError } from "firebase/app";
 
 export const userApi = createApi({
   reducerPath: "userApi",
   baseQuery: fakeBaseQuery(),
   endpoints: (builder) => ({
-    login: builder.mutation<
-      AppUser | null,
-      { email: string; password: string }
-    >({
+    login: builder.mutation<AppUser, { email: string; password: string }>({
       async queryFn({ email, password }) {
         try {
+          // Аутентификация пользователя через Firebase
           const userCredential = await signInWithEmailAndPassword(
             auth,
             email,
@@ -26,26 +25,59 @@ export const userApi = createApi({
           );
           const user = userCredential.user;
 
+          // Получение данных пользователя из Firestore
           const userDoc = await getDoc(doc(db, "users", user.uid));
 
           if (userDoc.exists()) {
             const userData = { ...user, ...userDoc.data() } as AppUser;
+
+            // Сохранение пользователя в Zustand
             useUserStore.getState().setUser(userData);
             useUserStore.getState().setInitialized(true);
-            const accsesToken = await user.getIdToken();
-            Cookies.set("accessToken", accsesToken, {
-              secure: true,
+
+            // Сохранение токена в куки
+            const accessToken = await user.getIdToken();
+            Cookies.set("accessToken", accessToken, {
+              
               sameSite: "strict",
               expires: 1,
             });
+
             return { data: userData };
           } else {
-            return { error: { status: 404, data: "User document not found" } };
+            return {
+              error: {
+                status: 404,
+                data: {
+                  message: "User document not found",
+                  code: "USER_NOT_FOUND",
+                },
+              },
+            };
           }
         } catch (error) {
-          const errorMessage =
-            (error as Error).message || "An unknown error occurred";
-          return { error: { status: 500, data: errorMessage } };
+          let errorMessage = "An unknown error occurred";
+          if (error instanceof FirebaseError) {
+            switch (error.code) {
+              case "auth/user-not-found":
+                errorMessage = "User not found";
+                break;
+              case "auth/wrong-password":
+                errorMessage = "Incorrect password";
+                break;
+              default:
+                errorMessage = error.message;
+            }
+          }
+          return {
+            error: {
+              status: 500,
+              data: {
+                message: errorMessage,
+                code: "LOGIN_ERROR",
+              },
+            },
+          };
         }
       },
     }),
@@ -82,34 +114,35 @@ export const userApi = createApi({
       },
     }),
 
-    updateUser: builder.mutation<AppUser, { uid: string; data: Partial<AppUser> }>({
+    updateUser: builder.mutation<
+      AppUser,
+      { uid: string; data: Partial<AppUser> }
+    >({
       async queryFn({ uid, data }) {
         try {
           const userRef = doc(db, "users", uid);
           await updateDoc(userRef, data);
-    
-      
+
           const updatedUserDoc = await getDoc(userRef);
           if (!updatedUserDoc.exists()) {
             throw new Error("User not found after update");
           }
           const updatedUser = updatedUserDoc.data() as AppUser;
-    
-          return { data: updatedUser }; 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+          return { data: updatedUser };
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
           return { error: { status: 500, data: error.message } };
         }
       },
     }),
-    
 
     deleteUser: builder.mutation<void, string>({
       async queryFn(uid) {
         try {
           const userRef = doc(db, "users", uid);
           await deleteDoc(userRef);
-        
+
           return { data: undefined };
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
@@ -119,24 +152,19 @@ export const userApi = createApi({
     }),
 
     logout: builder.mutation<null, void>({
-      queryFn: () => ({ data: null}), 
+      queryFn: () => ({ data: null }),
       async onCacheEntryAdded(_, { cacheEntryRemoved }) {
         try {
-         
           auth.signOut();
           localStorage.clear();
           useUserStore.getState().setUser(null);
-    
-          
+
           await cacheEntryRemoved;
         } catch (error) {
           console.error("Logout failed:", error);
         }
       },
     }),
-    
-    
-    
   }),
 });
 

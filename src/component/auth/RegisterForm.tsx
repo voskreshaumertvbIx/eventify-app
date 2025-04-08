@@ -1,4 +1,4 @@
-"use client"; 
+"use client";
 
 import React from "react";
 import { Input } from "../reusable/Input";
@@ -8,27 +8,32 @@ import Logo from "../reusable/Logo";
 import { Registerform } from "@/interfaces";
 import { useRegistrationMutation } from "@/redux/userApi/userApi";
 
-
-
-
 const Register = () => {
-const [registration] = useRegistrationMutation();
+  const [registration, { isLoading }] = useRegistrationMutation();
 
-  const { register, handleSubmit, formState, reset } = useForm<Registerform>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, submitCount, isDirty },
+    reset,
+  } = useForm<Registerform>({
     defaultValues: {
       email: "",
       password: "",
       username: "",
     },
+    mode: "onChange",
   });
+
+  const showError = submitCount > 0 || isDirty;
 
   const submit: SubmitHandler<Registerform> = async (data) => {
     try {
-      const user = registration(data);
-      console.log("User registered successfully:", user);
+      const result = await registration(data).unwrap();
+      console.log("User registered successfully:", result);
       reset();
     } catch (err) {
-      console.log(err, "register error");
+      console.error("Registration error:", err);
     }
   };
 
@@ -36,14 +41,9 @@ const [registration] = useRegistrationMutation();
     <div className="flex h-[87vh] w-full shadow-lg">
       <form
         autoComplete="off"
-        style={{
-          boxShadow: "15px 13px 44px 15px rgba(99,0,191,1)",
-          WebkitBoxShadow: "15px 13px 44px 15px rgba(99,0,191,1)",
-          MozBoxShadow: "15px 13px 44px 15px rgba(99,0,191,1)",
-        }}
+        className="form-shadow mx-auto mt-[9%] h-[60%] w-[450px] rounded-xl border-black p-2 dark:border-white"
         onSubmit={handleSubmit(submit)}
         noValidate
-        className="mx-auto mt-[9%] h-[60%] w-[450px] rounded-xl border-black p-2 dark:border-white"
       >
         <div className="flex h-full flex-col items-center">
           <Logo />
@@ -51,11 +51,11 @@ const [registration] = useRegistrationMutation();
 
           <Input
             type="email"
-            className=""
             placeholder="example@example.com"
-            error={formState.errors["email"]?.message}
+            aria-label="Email"
+            error={showError ? errors.email?.message : undefined}
             {...register("email", {
-              required: true,
+              required: "Email is required",
               pattern: {
                 value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
                 message: "Invalid email address",
@@ -64,13 +64,12 @@ const [registration] = useRegistrationMutation();
           />
 
           <Input
-            id="password"
             type="password"
             placeholder="enter password"
-            className=""
-            error={formState.errors["password"]?.message}
+            aria-label="Password"
+            error={showError ? errors.password?.message : undefined}
             {...register("password", {
-              required: "Password required",
+              required: "Password is required",
               pattern: {
                 value:
                   /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+={}\[\]|\\:;,.<>?/-]{6,}$/,
@@ -79,11 +78,12 @@ const [registration] = useRegistrationMutation();
               },
             })}
           />
+
           <Input
-            id="username"
             type="text"
             placeholder="enter username"
-            error={formState.errors.username?.message}
+            aria-label="Username"
+            error={showError ? errors.username?.message : undefined}
             {...register("username", {
               required: "Username is required",
               minLength: {
@@ -98,8 +98,13 @@ const [registration] = useRegistrationMutation();
             })}
           />
 
-          <Button className="mt-4" variant={"default"} size={"sm"}>
-            Register
+          <Button
+            className="mt-4"
+            variant={"default"}
+            size={"sm"}
+            disabled={isLoading}
+          >
+            {isLoading ? "Loading..." : "Register"}
           </Button>
         </div>
       </form>
