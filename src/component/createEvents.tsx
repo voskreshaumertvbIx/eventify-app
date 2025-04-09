@@ -10,6 +10,7 @@ import Goodtoknow from "./create_events_form/goodtoknow";
 import { useUserStore } from "@/redux/store/userStore";
 import { useEventStore } from "@/redux/store/eventStore";
 import { useCreateEventMutation } from "@/redux/userApi/createeventsApi";
+import { useLocationStore } from "@/redux/store/useLocationStore";
 
 
 const CreateEvents = () => {
@@ -36,15 +37,22 @@ const CreateEvents = () => {
   const submit = async (data: Event) => {
     if (!user) return;
   
+    const { lat, lon } = useLocationStore.getState();
+  
     const fullData = {
       ...data,
       createdby: user.uid || "Anonymous",
+      location: {
+        lat: lat || 0,
+        lon: lon || 0,
+      },
     };
   
     const response = await createEvent(fullData).unwrap();
     addEventToStore(response);
     console.log("Event created and saved:", response);
   };
+  
   
   
 

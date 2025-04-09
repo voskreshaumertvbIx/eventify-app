@@ -15,22 +15,21 @@ import { db } from "@/lib/firebase";
 export const eventApi = createApi({
   reducerPath: "eventApi",
   baseQuery: fakeBaseQuery(),
+  tagTypes: ["Events"], // 👈 добавили
   endpoints: (builder) => ({
     createEvent: builder.mutation<Event, Event>({
       async queryFn(eventData) {
         try {
           const eventsCollection = collection(db, "events");
-          const newDocRef = doc(eventsCollection); 
+          const newDocRef = doc(eventsCollection);
           const newEvent: Event = {
             ...eventData,
             uid: newDocRef.id,
           };
-
           await setDoc(newDocRef, {
             ...newEvent,
             timestamp: serverTimestamp(),
           });
-
           return { data: newEvent };
         } catch (err: any) {
           return {
@@ -38,6 +37,7 @@ export const eventApi = createApi({
           };
         }
       },
+      invalidatesTags: ["Events"], 
     }),
 
     fetchAllEvents: builder.query<Event[], void>({
@@ -52,8 +52,10 @@ export const eventApi = createApi({
           };
         }
       },
+      providesTags: ["Events"], 
     }),
   }),
 });
+
 
 export const { useCreateEventMutation, useFetchAllEventsQuery } = eventApi;

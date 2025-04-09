@@ -30,6 +30,7 @@ const TitleSection: React.FC = () => {
               event is about.
             </p>
             <Input
+            id="title"
               type="text"
               placeholder="Event title*"
               error={formState.errors["title"]?.message?.toString()}

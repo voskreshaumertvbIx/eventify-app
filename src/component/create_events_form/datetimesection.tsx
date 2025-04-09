@@ -76,7 +76,7 @@ const DateTimeSection: React.FC = () => {
               availableTimes={availableTimes}
               rules={{ required: "Start time is required" }}
               onChangeCallback={(value) => setStartTime(value)}
-              className="h-10" // Опционально: Добавьте одинаковую высоту для TimePicker
+              className="h-10" 
             />
 
             <TimePicker

@@ -58,7 +58,7 @@ const MapWithSearch: React.FC = () => {
         .setLngLat([parseFloat(lon), parseFloat(lat)])
         .addTo(mapRef.current);
 
-      setLocation(parseFloat(lon), parseFloat(lon));
+        setLocation(parseFloat(lat), parseFloat(lon));
     }
   }, [results, setLocation]);
 

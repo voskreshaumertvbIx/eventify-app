@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export type Avatar = {
   file: string;
   url: string;
@@ -37,12 +39,13 @@ export interface Event {
     lon: number;
   };
   dateinfo: {
-    date: Date | null;
+    date: Date | Timestamp;
     start: string;
     end: string;
   };
   createdby: string;
   createdImg : Avatar;
+  allowedAge?:string;
 }
 export interface Registerform {
   email: string;

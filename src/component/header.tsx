@@ -18,8 +18,8 @@ const links = [
     route: "/",
   },
   {
-    name: "name2",
-    route: "",
+    name: "Events",
+    route: "/events",
   },
   {
     name: "name3",
@@ -86,7 +86,7 @@ const Header = () => {
               className="cursor-pointer rounded-full"
               onClick={toggleModal}
             />
-            {isModalOpen && <UserMenuModal />}
+            {isModalOpen && <UserMenuModal  setIsModalOpen={setIsModalOpen}/>}
           </div>
         ) : (
           <span>

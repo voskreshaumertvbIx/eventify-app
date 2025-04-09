@@ -3,12 +3,18 @@ import { CiUser, CiLogout } from "react-icons/ci";
 import { useRouter } from "next/navigation";
 import { useLogoutMutation } from "../redux/userApi/userApi";
 
-const UserMenuModal = () => {
+
+interface UserMenuModalProps {
+  setIsModalOpen: (isOpen: boolean) => void;
+}
+
+const UserMenuModal = ({ setIsModalOpen }: UserMenuModalProps) => {
   const [logout] = useLogoutMutation();
   const router = useRouter();
 
   const handleUserProfile = () => {
     router.replace("/dashboard/userprofile");
+    setIsModalOpen(false)
   };
 
   const handleLogOut = () => {
