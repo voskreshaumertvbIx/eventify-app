@@ -46,6 +46,7 @@ export interface Event {
   createdby: string;
   createdImg : Avatar;
   allowedAge?:string;
+  parkingOption?:string;
 }
 export interface Registerform {
   email: string;

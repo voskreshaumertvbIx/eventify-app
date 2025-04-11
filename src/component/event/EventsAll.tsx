@@ -3,25 +3,43 @@
 import React, { useMemo, useState } from "react";
 import { useFetchAllEventsQuery } from "@/redux/userApi/createeventsApi";
 import EventCard from "./EventsCard";
-
+import { Timestamp } from "firebase/firestore";
+import EventFilter from "./EventFilter";
 
 const EventsAll = () => {
   const { data: events, isLoading } = useFetchAllEventsQuery();
+
   const [search, setSearch] = useState("");
   const [ageFilter, setAgeFilter] = useState<string | null>(null);
+  const [sortByDate, setSortByDate] = useState<"asc" | "desc">("asc");
+  const [parkingFilter, setParkingFilter] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
   const eventsPerPage = 6;
 
+  const normalizeDate = (input: Date | Timestamp): Date =>
+    input instanceof Timestamp ? input.toDate() : input;
+
   const filteredEvents = useMemo(() => {
     if (!events) return [];
 
-    return events.filter((event) => {
+    const result = events.filter((event) => {
       const matchesSearch = event.title.toLowerCase().includes(search.toLowerCase());
       const matchesAge = ageFilter ? event.allowedAge === ageFilter : true;
-      return matchesSearch && matchesAge;
+      const matchesParking = parkingFilter ? event.parkingOption === parkingFilter : true;
+      return matchesSearch && matchesAge && matchesParking;
     });
-  }, [events, search, ageFilter]);
+
+    result.sort((a, b) => {
+      const dateA = normalizeDate(a.dateinfo.date);
+      const dateB = normalizeDate(b.dateinfo.date);
+      return sortByDate === "asc"
+        ? dateA.getTime() - dateB.getTime()
+        : dateB.getTime() - dateA.getTime();
+    });
+
+    return result;
+  }, [events, search, ageFilter, sortByDate, parkingFilter]);
 
   const paginatedEvents = useMemo(() => {
     const startIndex = (currentPage - 1) * eventsPerPage;
@@ -34,27 +52,18 @@ const EventsAll = () => {
 
   return (
     <div className="p-4 max-w-6xl mx-auto">
-      <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <input
-          type="text"
-          placeholder="Search by title..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="px-4 py-2 border rounded w-full sm:w-1/3"
-        />
+      <EventFilter
+        search={search}
+        setSearch={setSearch}
+        ageFilter={ageFilter}
+        setAgeFilter={setAgeFilter}
+        sortByDate={sortByDate}
+        setSortByDate={setSortByDate}
+        parkingFilter={parkingFilter}
+        setParkingFilter={setParkingFilter}
+      />
 
-        <select
-          value={ageFilter || ""}
-          onChange={(e) => setAgeFilter(e.target.value || null)}
-          className="px-4 py-2 border rounded w-full sm:w-1/4"
-        >
-          <option value="">All Ages</option>
-          <option value="18+">18+</option>
-          <option value="21+">21+</option>
-        </select>
-      </div>
-
-      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-4">
         {paginatedEvents.map((event) => (
           <EventCard key={event.uid} event={event} />
         ))}
@@ -66,8 +75,8 @@ const EventsAll = () => {
             <button
               key={i}
               onClick={() => setCurrentPage(i + 1)}
-              className={`px-4 py-2 rounded ${
-                currentPage === i + 1 ? "bg-blue-600 text-white" : "bg-gray-200"
+              className={`px-4 py-2 rounded transition-colors duration-200 text-sm font-medium ${
+                currentPage === i + 1 ? "bg-blue-600 text-white" : "bg-gray-200 hover:bg-gray-300"
               }`}
             >
               {i + 1}

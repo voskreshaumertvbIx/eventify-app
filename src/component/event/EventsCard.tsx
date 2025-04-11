@@ -39,13 +39,13 @@ const EventCard = ({ event }: Props) => {
   const formatEventDate = (date: any): string => {
     if (!date) return "Invalid date";
     try {
-      if (typeof date === 'object' && 'toDate' in date) {
+      if (typeof date === "object" && "toDate" in date) {
         return date.toDate().toLocaleDateString("en-US", {
           year: "numeric",
           month: "short",
           day: "numeric",
         });
-      } 
+      }
       return "Invalid date";
     } catch (error) {
       console.error("Date formatting error:", error);
@@ -84,7 +84,7 @@ const EventCard = ({ event }: Props) => {
       <h2 className="mt-2 text-xl font-semibold dark:text-white">
         {event.title}
       </h2>
-      <p className="mb-1 text-sm text-gray-600 dark:text-gray-300">
+      <p className="mb-1 line-clamp-3 text-sm text-gray-600 dark:text-gray-300">
         {event.description}
       </p>
 
@@ -93,8 +93,9 @@ const EventCard = ({ event }: Props) => {
       </p>
 
       <p className="text-sm dark:text-gray-400">
-  📅 {formatEventDate(event.dateinfo.date)} ⏰ {event.dateinfo.start} - {event.dateinfo.end}
-</p>
+        📅 {formatEventDate(event.dateinfo.date)} ⏰ {event.dateinfo.start} -{" "}
+        {event.dateinfo.end}
+      </p>
 
       <p className="text-sm text-gray-500 dark:text-gray-400">
         👤 Created by: {creatorName}
